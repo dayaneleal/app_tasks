@@ -8,7 +8,11 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.devmasterteam.tasks.databinding.FragmentAllTasksBinding
+import com.devmasterteam.tasks.service.listener.TaskListener
+import com.devmasterteam.tasks.view.adapter.TaskAdapter
 import com.devmasterteam.tasks.viewmodel.TaskListViewModel
 
 class AllTasksFragment : Fragment() {
@@ -17,11 +21,36 @@ class AllTasksFragment : Fragment() {
     private var _binding: FragmentAllTasksBinding? = null
     private val binding get() = _binding!!
 
+    private val adapter = TaskAdapter()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, b: Bundle?): View {
         viewModel = ViewModelProvider(this).get(TaskListViewModel::class.java)
         _binding = FragmentAllTasksBinding.inflate(inflater, container, false)
 
-        val recycler = binding.recyclerAllTasks
+        //Layout para a RecyclerView
+        binding.recyclerAllTasks.layoutManager = LinearLayoutManager(context)
+        //Adapter para a RecyclerView
+        binding.recyclerAllTasks.adapter = adapter
+
+        val listener = object: TaskListener {
+            override fun onListClick(id: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDeleteClick(id: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onCompleteClick(id: Int) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onUndoClick(id: Int) {
+                TODO("Not yet implemented")
+            }
+        }
+
+        adapter.attachListener(listener)
 
         // Cria os observadores
         observe()
@@ -34,7 +63,15 @@ class AllTasksFragment : Fragment() {
         _binding = null
     }
 
-    private fun observe() {
+    override fun onResume() {
+        super.onResume()
+        viewModel.list()
+    }
 
+    private fun observe() {
+        //lifecycleOwner porque estamos numa fragment
+        viewModel.tasks.observe(viewLifecycleOwner) {
+            adapter.updateTasks(it)
+        }
     }
 }
