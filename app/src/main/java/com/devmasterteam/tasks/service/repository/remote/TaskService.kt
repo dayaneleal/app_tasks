@@ -48,7 +48,7 @@ interface TaskService {
 
 
     //TODO
-    @DELETE("Task")
+    @HTTP(method = "DELETE", path = "Task", hasBody = true)
     @FormUrlEncoded
     fun delete(
         @Field("Id") id: Int,

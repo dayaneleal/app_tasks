@@ -10,7 +10,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PersonRepository(val context: Context) : BaseRepository() {
+class PersonRepository(context: Context) : BaseRepository(context) {
 
     private val remote = RetrofitClient.getService(PersonService::class.java)
 
@@ -22,16 +22,7 @@ class PersonRepository(val context: Context) : BaseRepository() {
     ) {
         val call = remote.login(email, password)
         //Chamada assíncrona
-        call.enqueue(object : Callback<PersonModel> {
-            override fun onResponse(call: Call<PersonModel>, response: Response<PersonModel>) {
-                handleResponse(response, onSuccess, onError)
-            }
-
-            override fun onFailure(call: Call<PersonModel>, t: Throwable) {
-                onError(context.getString(R.string.ERROR_UNEXPECTED))
-            }
-
-        })
+        executeCall(call, onSuccess, onError)
     }
 
     private fun failResponse(str: String): String {
