@@ -28,11 +28,19 @@ class TaskFormViewModel(application: Application) : AndroidViewModel(application
     val taskLoad: LiveData<ValidationModel> = _taskLoad
 
     fun save(task: TaskModel) {
-        taskRepository.create(task, onSuccess = {
-            _taskSave.value = ValidationModel()
-        }, onError = {
-            _taskSave.value = ValidationModel(it)
-        })
+        if (task.id == 0) {
+            taskRepository.create(task, onSuccess = {
+                _taskSave.value = ValidationModel()
+            }, onError = {
+                _taskSave.value = ValidationModel(it)
+            })
+        } else {
+            taskRepository.update(task, onSuccess = {
+                _taskSave.value = ValidationModel()
+            }, onError = {
+                _taskSave.value = ValidationModel(it)
+            })
+        }
     }
 
     fun load(id: Int) {

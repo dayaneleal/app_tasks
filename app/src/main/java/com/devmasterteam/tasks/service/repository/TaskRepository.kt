@@ -1,6 +1,7 @@
 package com.devmasterteam.tasks.service.repository
 
 import android.content.Context
+import com.devmasterteam.tasks.R
 import com.devmasterteam.tasks.service.model.TaskModel
 import com.devmasterteam.tasks.service.repository.remote.RetrofitClient
 import com.devmasterteam.tasks.service.repository.remote.TaskService
@@ -10,6 +11,12 @@ class TaskRepository(context: Context): BaseRepository(context) {
     private val remote = RetrofitClient.getService(TaskService::class.java)
 
     fun list(onSuccess: (List<TaskModel>) -> Unit, onError: (String)-> Unit) {
+
+        if(!isConnectionAvailable()) {
+            onError(context.getString(R.string.ERROR_INTERNET_CONNECTION))
+            return
+        }
+
         val call = remote.list()
         executeCall(call, onSuccess, onError)
     }
@@ -26,6 +33,11 @@ class TaskRepository(context: Context): BaseRepository(context) {
 
     fun create(task: TaskModel, onSuccess: (Boolean) -> Unit, onError: (String)-> Unit) {
         val call = remote.create(task.priorityId, task.description, task.dueDate, task.complete)
+        executeCall(call, onSuccess, onError)
+    }
+
+    fun  update(task: TaskModel, onSuccess: (Boolean) -> Unit, onError: (String)-> Unit) {
+        val call = remote.update(task.id, task.priorityId, task.description, task.dueDate, task.complete)
         executeCall(call, onSuccess, onError)
     }
 

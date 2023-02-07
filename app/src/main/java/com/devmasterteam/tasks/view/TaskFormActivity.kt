@@ -26,6 +26,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
     private lateinit var binding: ActivityTaskFormBinding
     private val dateFormat: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
     private var listPriority: List<PriorityModel> = mutableListOf()
+    private var taskIdentification = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,7 +98,11 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
 
         viewModel.taskSave.observe(this) {
             if (it.status()) {
-                toast("Sucesso")
+                if(taskIdentification == 0) {
+                    toast("Tarefa criada com sucesso")
+                } else {
+                    toast("Tarefa atualizada com sucesso")
+                }
                 finish()
             } else {
                 toast(it.message())
@@ -108,13 +113,13 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
             binding.editDescription.setText(it.description)
             binding.spinnerPriority.setSelection(getIndex(it.priorityId))
             binding.checkComplete.isChecked = it.complete
-            binding.buttonDate.text = it.dueDate
+            val date = SimpleDateFormat("yyyy-MM-dd").parse(it.dueDate)
+            binding.buttonDate.text = SimpleDateFormat("dd/MM/yyyy").format(date)
         }
 
         viewModel.taskLoad.observe(this) {
             if (!it.status()) {
                 toast(it.message())
-                finish()
             }
         }
     }
@@ -125,7 +130,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
 
     private fun handleSave() {
         val task = TaskModel().apply {
-            this.id = 0
+            this.id = taskIdentification
             this.description = binding.editDescription.text.toString()
             val index = binding.spinnerPriority.selectedItemPosition
             this.priorityId = listPriority[index].id
@@ -138,7 +143,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener,
 
     private fun loadDataFromActiviy() {
         val bundle = intent.extras
-        val taskId = bundle?.getInt(TaskConstants.BUNDLE.TASKID) ?: 0
-        viewModel.load(taskId)
+        taskIdentification = bundle?.getInt(TaskConstants.BUNDLE.TASKID) ?: 0
+        viewModel.load(taskIdentification)
     }
 }

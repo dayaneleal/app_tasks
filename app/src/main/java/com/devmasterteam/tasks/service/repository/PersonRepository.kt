@@ -25,6 +25,18 @@ class PersonRepository(context: Context) : BaseRepository(context) {
         executeCall(call, onSuccess, onError)
     }
 
+    fun create(
+        name: String,
+        email: String,
+        password: String,
+        onSuccess: (PersonModel) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        val call = remote.create(name, email, password)
+        //Chamada assíncrona
+        executeCall(call, onSuccess, onError)
+    }
+
     private fun failResponse(str: String): String {
         return Gson().fromJson(str, String::class.java)
     }
