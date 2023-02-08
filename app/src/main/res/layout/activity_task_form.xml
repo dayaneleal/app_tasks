@@ -19,9 +19,9 @@
 
     <View
         android:id="@+id/view_description"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/black"
+        style="@style/ViewDivider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_description" />
 
     <TextView
@@ -45,8 +45,7 @@
 
     <View
         android:id="@+id/view_complete"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
+        style="@style/ViewDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinner_priority" />
@@ -64,11 +63,20 @@
 
     <View
         android:id="@+id/view_date"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
+        style="@style/ViewDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/check_complete" />
+
+    <TextView
+        android:id="@+id/text_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/data_limite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_date" />
 
     <Button
         android:id="@+id/button_date"
@@ -76,12 +84,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
-        android:gravity="center_vertical"
+        android:gravity="center"
         android:textColor="@color/black"
         android:hint="@string/clique_para_selecionar_a_data"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_date" />
+        app:layout_constraintTop_toBottomOf="@id/text_date" />
 
     <View
         android:id="@+id/view_save"
